@@ -26,3 +26,8 @@ include/config.h
 make_support/system_rules
 config.log
 config.status
+/swig/Java/nbproject/private/
+/swig/Java/dist/
+/swig/NewPythonProject/nbproject/private/
+/swig/Python/nbproject/private/
+/swig/NewPythonProject2/nbproject/private/
