@@ -53,7 +53,9 @@ build_only: $(OBJS)
 	rm -f asf.a
 	ar r asf.a $(OBJS)
 	$(RANLIB) asf.a
-
+	gcc -shared -o libasf.so $(OBJS)
+	mv libasf.so $(LIBDIR)
+	
 # Rebuild everything if makefile or any local of ASF header or library
 # has changed.
 $(OBJS): Makefile $(wildcard *.h) $(wildcard ../../include/*.h)
