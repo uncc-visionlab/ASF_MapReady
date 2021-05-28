@@ -618,7 +618,7 @@ char *radiometry2str(radiometry_t radiometry);
 void meta_write(meta_parameters *meta,const char *outName);
 void meta_write_xml(meta_parameters *meta, const char *file_name);
 //void meta_write_xml_ext(meta_parameters *meta, const char *logFile, int iso,
-//	conmeta_write_xml_extst char *file_name);
+//	const char *file_name);
 
 /* Write  sprocket style metadata */
 void meta_write_sprocket(const char *sprocketName, meta_parameters *meta,
