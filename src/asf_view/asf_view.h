@@ -202,6 +202,7 @@ int handle_tiff_file(const char *filename, char *meta_name, char *data_name,
 meta_parameters *read_tiff_meta(const char *meta_name, ClientInterface *client,
                                 const char *filename);
 int open_tiff_data(const char *data_name, const char *band, ClientInterface *client);
+meta_insar *populate_insar_metadata(const char *filename);
 
 /* read_png.c */
 int try_png(const char *filename, int try_extensions);

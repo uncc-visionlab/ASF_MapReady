@@ -617,8 +617,8 @@ char *image_data_type2str(image_data_type_t image_data_type);
 char *radiometry2str(radiometry_t radiometry);
 void meta_write(meta_parameters *meta,const char *outName);
 void meta_write_xml(meta_parameters *meta, const char *file_name);
-void meta_write_xml_ext(meta_parameters *meta, const char *logFile, int iso,
-	const char *file_name);
+//void meta_write_xml_ext(meta_parameters *meta, const char *logFile, int iso,
+//	conmeta_write_xml_extst char *file_name);
 
 /* Write  sprocket style metadata */
 void meta_write_sprocket(const char *sprocketName, meta_parameters *meta,
@@ -1042,7 +1042,7 @@ void map_distortions(meta_projection *proj, double lat, double lon,
 		     distortion_t *distortion);
 
 // Prototypes for meta_tiff.c
-meta_insar *populate_insar_metadata(const char *filename);
+//meta_insar *populate_insar_metadata(const char *filename);
 
 // Prototypes for meta_check.c
 int isAIRSAR(char *dataFile);
