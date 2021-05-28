@@ -12,7 +12,6 @@ CFLAGS += $(HDF5_CFLAGS)
 CFLAGS += $(GEOTIFF_CFLAGS)
 CFLAGS += $(HDF5_CFLAGS)
 # Makefile for libasf_proj library
-JAVA_HOME = /usr/lib/jvm/default-java
 
 include ../make_support/system_rules
 
@@ -37,26 +36,26 @@ all: swig
 ## Target: swig
 swig: .FORCE
 	rm -rf libobjs
-	$(MAKE) -C ../src/asf build_only	
-	$(MAKE) -C ../src/asf_fft build_only	
-	$(MAKE) -C ../src/asf_meta build_only	
+	$(MAKE) -C ../src/asf shared_library	
+	$(MAKE) -C ../src/asf_fft shared_library	
+	$(MAKE) -C ../src/asf_meta shared_library	
 	#$(MAKE) -C ../src/asf_view 	
-	$(MAKE) -C ../src/libasf_ardop build_only	
-	$(MAKE) -C ../src/libasf_convert build_only	
-	$(MAKE) -C ../src/libasf_export build_only	
-	$(MAKE) -C ../src/libasf_geocode build_only	
-	$(MAKE) -C ../src/libasf_import build_only	
-	$(MAKE) -C ../src/libasf_insar build_only	
-	$(MAKE) -C ../src/libasf_metadata build_only	
-	$(MAKE) -C ../src/libasf_proj build_only	
-	$(MAKE) -C ../src/libasf_raster build_only	
-	$(MAKE) -C ../src/libasf_remap build_only	
-	$(MAKE) -C ../src/libasf_sar build_only		
-	$(MAKE) -C ../src/libasf_terrcorr build_only	
-	$(MAKE) -C ../src/libasf_vector build_only	
-	$(MAKE) -C ../src/libifm build_only
-	$(MAKE) -C ../src/plan lib
-	mkdir -p libobjs
+	$(MAKE) -C ../src/libasf_ardop shared_library	
+	$(MAKE) -C ../src/libasf_convert shared_library	
+	$(MAKE) -C ../src/libasf_export shared_library	
+	$(MAKE) -C ../src/libasf_geocode shared_library	
+	$(MAKE) -C ../src/libasf_import shared_library	
+	$(MAKE) -C ../src/libasf_insar shared_library	
+	$(MAKE) -C ../src/libasf_metadata shared_library	
+	$(MAKE) -C ../src/libasf_proj shared_library	
+	$(MAKE) -C ../src/libasf_raster shared_library	
+	$(MAKE) -C ../src/libasf_remap shared_library	
+	$(MAKE) -C ../src/libasf_sar shared_library		
+	$(MAKE) -C ../src/libasf_terrcorr shared_library	
+	$(MAKE) -C ../src/libasf_vector shared_library	
+	$(MAKE) -C ../src/libifm shared_library
+	#$(MAKE) -C ../src/plan lib
+	#mkdir -p libobjs
 	#cp ../src/asf/*.o libobjs
 	#cp ../src/asf_fft/*.o libobjs
 	#cp ../src/asf_meta/*.o libobjs	
@@ -103,7 +102,7 @@ swig: .FORCE
 	$(MAKE) -C ../src/libasf_terrcorr clean	
 	$(MAKE) -C ../src/libasf_vector clean	
 	$(MAKE) -C ../src/libifm clean	
-	$(MAKE) -C ../src/plan clean	
+	#$(MAKE) -C ../src/plan clean	
 	mkdir -p ./Python
 	echo $(PYTHON_CFLAGS)
 	#swig -c++ -python -outdir Python asf_mapready.i
@@ -118,9 +117,10 @@ swig: .FORCE
 	#gcc -shared -o Python/_asf_mapready.so asf_mapready_wrap.o $(PYTHON_LDFLAGS) -Wl,--whole-archive ../lib/asf.a ../lib/asf_meta.a ../lib/libasf_export.a ../lib/libasf_geocode.a ../lib/libasf_import.a ../lib/libasf_insar.a ../lib/libasf_metadata.a ../lib/libasf_proj.a ../lib/libasf_raster.a ../lib/libasf_vector.a ../lib/libifm.a -Wl,--no-whole-archive -L/usr/lib/x86_64-linux-gnu/hdf5/openmpi -L/usr/lib/openmpi/lib -lhdf5 -lmpi -lgsl -lcblas -lxml2 -lproj -ljpeg -ltiff -lgeotiff -lshp -lgdal -lglib-2.0
 	#gcc -shared -o Python/_asf_mapready.so asf_mapready_wrap.o -Wl,--whole-archive ../lib/asf.a  -Wl,--no-whole-archive -Wl,--whole-archive ../lib/asf_meta.a  -Wl,--no-whole-archive -L/usr/lib/x86_64-linux-gnu/hdf5/openmpi -L/usr/lib/openmpi/lib -lhdf5 -lmpi -lgsl -lcblas -lxml2 -lproj -ljpeg -ltiff -lgeotiff -lshp -lgdal $(PYTHON_LDFLAGS)
 	#gcc -shared -o Python/_asf_mapready.so asf_mapready_wrap.o -Wl,--whole-archive ../lib/asf.a  -Wl,--no-whole-archive -Wl,--whole-archive ../lib/asf_meta.a  -Wl,--no-whole-archive -Wl,--whole-archive ../lib/libasf_import.a  -Wl,--no-whole-archive -Wl,--whole-archive ../lib/libasf_metadata.a  -Wl,--no-whole-archive -Wl,--whole-archive ../lib/libasf_proj.a  -Wl,--no-whole-archive -Wl,--whole-archive ../lib/libasf_sar.a  -Wl,--no-whole-archive -L/usr/lib/x86_64-linux-gnu/hdf5/openmpi -L/usr/lib/openmpi/lib -lhdf5 -lmpi -lgsl -lxml2 -lproj -ljpeg -ltiff -lgeotiff -lshp 
-	mkdir -p ./Java/src/swig/asf
+	mkdir -p Java/src/native_libs
+	mkdir -p Java/src/swig/asf
 	swig -java -outdir Java/src/swig/asf -package swig.asf asf_mapready.i
-	gcc -fPIC -c asf_mapready_wrap.c -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/linux -I../include -I/usr/include/geotiff -I/usr/include/hdf5/serial -I/usr/include/libxml2
+	gcc -fPIC -c asf_mapready_wrap.c -I/usr/lib/jvm/default-java/include -I/usr/lib/jvm/default-java/include/linux -I../include -I/usr/include/geotiff -I/usr/include/hdf5/serial -I/usr/include/libxml2
 	#gcc -shared -o Java/libasf_mapready.so asf_mapready_wrap.o -Wl,--whole-archive ../lib/asf.a  -Wl,--no-whole-archive -Wl,--whole-archive ../lib/asf_meta.a  -Wl,--no-whole-archive -Wl,--whole-archive ../lib/libasf_import.a  -Wl,--no-whole-archive -Wl,--whole-archive ../lib/libasf_proj.a  -Wl,--no-whole-archive -Wl,--whole-archive ../lib/libasf_sar.a  -Wl,--no-whole-archive -L/usr/lib/x86_64-linux-gnu/hdf5/openmpi -L/usr/lib/openmpi/lib -lhdf5 -lmpi -lgsl -lxml2 -lproj -ljpeg -ltiff -lgeotiff -lshp 
 	gcc -shared -o Java/src/native_libs/libasf_mapready.so asf_mapready_wrap.o -Wl,--whole-archive ../lib/asf.a  -Wl,--no-whole-archive -Wl,--whole-archive ../lib/asf_meta.a  -Wl,--no-whole-archive -Wl,--whole-archive ../lib/libasf_import.a  -Wl,--no-whole-archive -Wl,--whole-archive ../lib/libasf_metadata.a  -Wl,--no-whole-archive -Wl,--whole-archive ../lib/libasf_proj.a  -Wl,--no-whole-archive -Wl,--whole-archive ../lib/libasf_sar.a  -Wl,--no-whole-archive -L/usr/lib/x86_64-linux-gnu/hdf5/openmpi -L/usr/lib/openmpi/lib -lhdf5 -lmpi -lgsl -lxml2 -lproj -ljpeg -ltiff -lgeotiff -lshp 
 	#gcc -shared -o Python/libasf_mapready.so asf_mapready_wrap.o -Wl,--whole-archive ../lib/asf.a  -Wl,--no-whole-archive -Wl,--whole-archive ../lib/asf_meta.a  -Wl,--no-whole-archive -Wl,--whole-archive ../lib/libasf_import.a  -Wl,--no-whole-archive -Wl,--whole-archive ../lib/libasf_proj.a  -Wl,--no-whole-archive -Wl,--whole-archive ../lib/libasf_sar.a  -Wl,--no-whole-archive -L/usr/lib/x86_64-linux-gnu/hdf5/openmpi -L/usr/lib/openmpi/lib -lhdf5 -lmpi -lgsl -lxml2 -lproj -ljpeg -ltiff -lgeotiff -lshp 
@@ -132,8 +132,8 @@ swig: .FORCE
 #### Clean target deletes all generated files ####c
 clean:
 	rm -rf Java/src/swig/asf/*
-	rm -rf Python/asf_mapready
-	rm asf_mapready_wrap.o libasf_mapready.so || true
+	rm Python/_asf_mapready.so Python/asf_mapready.py Python/__init.py__ || true
+	rm asf_mapready_wrap.c asf_mapready_wrap.o Java/src/native_libs/libasf_mapready.so || true
 
 
 
