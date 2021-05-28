@@ -58,7 +58,7 @@ static_library: $(OBJS)
 	ar r libasf_sar.a $(OBJS)
 	$(RANLIB) libasf_sar.a
 
-shared_library:
+shared_library: $(OBJS)
 	#$(MAKE) -C ../asf shared_library
 	#$(MAKE) -C ../asf_meta shared_library
 	#$(MAKE) -C ../libasf_vector shared_library
