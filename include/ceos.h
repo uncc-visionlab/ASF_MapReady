@@ -1737,12 +1737,12 @@ int get_shr(const char *filename, struct scene_header_rec *shr);
 int get_ampr(const char *filename, struct alos_map_proj_rec *ampr);
 int get_ardr(const char *filename, struct alos_rad_data_rec *ardr);
 
-int get_vdr(char *filename,struct VDREC *rec);
-int get_lfpr(char *filename,struct FPREC *rec);
-int get_dfpr(char *filename,struct FPREC *rec);
-int get_tr(char *filename,struct TREC *rec);
-
-int get_nvdr(char *filename,struct VDREC *rec);
+//int get_vdr(char *filename,struct VDREC *rec);
+//int get_lfpr(char *filename,struct FPREC *rec);
+//int get_dfpr(char *filename,struct FPREC *rec);
+//int get_tr(char *filename,struct TREC *rec);
+//
+//int get_nvdr(char *filename,struct VDREC *rec);
 int get_tfdr(char *filename,struct trl_file_des_rec *rec);
 
 #endif /* end of ceos.h */
