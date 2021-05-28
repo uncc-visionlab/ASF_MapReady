@@ -32,13 +32,18 @@ OBJLIB  = prn_facdr.o \
 	prn_tfdr.o \
 	metadata.o
 
-all: lib clean
+all: static_library clean
 
-lib: ${OBJLIB}
+static_library: ${OBJLIB}
+	rm -f libasf_metadata.a
 	ar r libasf_metadata.a $(OBJLIB)
 	$(RANLIB) libasf_metadata.a
 	mv libasf_metadata.a $(LIBDIR)
-	cp metadisplay.h $(ASF_INCLUDE_DIR)
+	cp -p metadisplay.h $(ASF_INCLUDE_DIR)
 
+shared_library: $(OBJLIB)
+	$(CC) -shared -o libasf_metadata.so $(OBJLIB)
+	mv libasf_metadata.so $(LIBDIR)
+	
 clean:
 	rm -f *.o core

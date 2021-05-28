@@ -18,13 +18,18 @@ OBJS = CLA.o \
 
 CFLAGS += -Wall $(W_ERROR) $(GEOTIFF_CFLAGS) $(HDF5_CFLAGS)
 
-all: lib clean
+all: static_library clean
 
-lib: $(OBJS)
+static_library: $(OBJS)
+	rm -f libasf_remap.a
 	ar r libasf_remap.a $(OBJS)
 	$(RANLIB) libasf_remap.a
 	mv libasf_remap.a $(LIBDIR)
-	cp asf_remap.h $(ASF_INCLUDE_DIR)
+	cp -p asf_remap.h $(ASF_INCLUDE_DIR)
 
+shared_library: $(OBJS)
+	gcc -shared -o libasf_remap.so $(OBJS)
+	mv libasf_remap.so $(LIBDIR)
+	
 clean:
 	rm -f *.o

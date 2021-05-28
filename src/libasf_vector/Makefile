@@ -43,18 +43,21 @@ LIBS = \
 	$(LDFAGS) \
 	-lm -lz
 
-all: build_only
+all: static_library
 	mv libasf_vector.a $(LIBDIR)
-	cp asf_vector.h $(ASF_INCLUDE_DIR)
+	cp -p asf_vector.h $(ASF_INCLUDE_DIR)
 	mkdir -p $(SHAREDIR)
 	cp -R data_dictionaries $(SHAREDIR)
 	cp convert2vector.config $(SHAREDIR)
 
-build_only: $(OBJS)
+static_library: $(OBJS)
 	rm -f libasf_vector.a
 	ar r libasf_vector.a $(OBJS)
 	$(RANLIB) libasf_vector.a
 
+shared_library: $(OBJS)
+	gcc -shared -o libasf_vector.so $(OBJS)
+	mv libasf_vector.so $(LIBDIR)
 
 # Rebuild everything if makefile or any local of ASF header or library
 # has changed.

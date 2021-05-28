@@ -13,19 +13,23 @@ OBJS  = asf_convert.o \
 
 CFLAGS += -Wall $(W_ERROR) $(GLIB_CFLAGS) $(GSL_CFLAGS) $(PROJ_CFLAGS) $(JPEG_CFLAGS) $(SHAPELIB_CFLAGS)
 
-all: build_only
+all: static_library
 	mv libasf_convert.a $(LIBDIR)
-	cp asf_convert.h $(ASF_INCLUDE_DIR)
+	cp -p asf_convert.h $(ASF_INCLUDE_DIR)
 	mkdir -p $(SHAREDIR)/asf_mapready
 	cp batch.config $(SHAREDIR)/asf_mapready
 	cp asf_mapready.defaults $(SHAREDIR)/asf_mapready
 	cp mapready_settings.cfg $(SHAREDIR)
 
-build_only: $(OBJS)
+static_library: $(OBJS)
 	rm -f libasf_convert.a
 	ar r libasf_convert.a $(OBJS)
 	$(RANLIB) libasf_convert.a
-
+	
+shared_library: $(OBJS)
+	$(CC) -shared -o libasf_convert.so $(OBJS)
+	mv libasf_convert.so $(LIBDIR)
+	
 $(OBJS): Makefile $(wildcard *.h) $(wildcard ../../include/*h)
 
 clean:

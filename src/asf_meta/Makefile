@@ -161,9 +161,9 @@ OBJS =  $(LEX_YACC_OBJS) \
 
 all: asf_meta test
 
-asf_meta: build_only
+asf_meta: static_library
 	mv asf_meta.a $(LIBDIR)
-	cp asf_meta.h get_ceos_names.h get_stf_names.h gamma.h meta_init_stVec.h \
+	cp -p asf_meta.h get_ceos_names.h get_stf_names.h gamma.h meta_init_stVec.h \
 		meta_project.h frame_calc.h dateUtil.h calibrate.h line_header.h\
 		envi.h doppler.h xml_util.h asf_iso_meta.h seasat_slant_shift.h \
                 $(ASF_INCLUDE_DIR)
@@ -171,11 +171,15 @@ asf_meta: build_only
 	-cp -R meta_test $(SHAREDIR)
 	-cp -R geotiff_test $(SHAREDIR)
 
-build_only: $(OBJS)
+static_library: $(OBJS)
 	rm -f asf_meta.a
 	ar r asf_meta.a $(OBJS)
 	$(RANLIB) asf_meta.a
 
+shared_library: $(OBJS)
+	$(CC) -shared -o libasf_meta.so $(OBJS)
+	mv libasf_meta.so $(LIBDIR)
+	
 # Rebuild everything if makefile or any local or ASF header or library
 # or any lex or yacc file has changed.  The line commented out uses a
 # target local variable to keep track of the local headers which are
@@ -191,20 +195,20 @@ clean:
 	$(patsubst %.y, %.tab.h, $(YACC_SOURCES)) y.tab.h y.output \
 	asf_meta_tester meta_update asf_meta.a metadata_parser.c
 
-check: asf_meta_tester.c build_only
+check: asf_meta_tester.c static_library
 	$(CC) $(CFLAGS) $< asf_meta.a \
 		$(LIBDIR)/libasf_proj.a \
 		$(LIBDIR)/asf.a $(GSL_LIBS) $(PROJ_LIBS) -lcheck $(LDFLAGS) \
 		-o asf_meta_tester
 	./asf_meta_tester
 
-meta_update: meta_update.c build_only
+meta_update: meta_update.c static_library
 	$(CC) $(CFLAGS) $< asf_meta.a -lm $(LDFLAGS) -o meta_update
 
 distclean:
 	rm -f core *~ TAGS gdb_init.com
 
-test: *.t.c build_only
+test: *.t.c static_library
 	$(CC) $(CFLAGS) -o test *.t.c $(CUNIT_LIBS) $(LIBDIR)/asf_meta.a $(LIBDIR)/asf.a $(LIBDIR)/libasf_proj.a $(LIBS) -lm -lz
 	./test
 

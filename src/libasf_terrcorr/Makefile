@@ -28,15 +28,19 @@ CFLAGS += $(GSL_CFLAGS) \
 	  $(XML_CFLAGS) \
 	  -D_XOPEN_SOURCE=600
 
-all: build_only
+all: static_library
 	mv libasf_terrcorr.a $(LIBDIR)
-	cp asf_terrcorr.h $(ASF_INCLUDE_DIR)
+	cp -p asf_terrcorr.h $(ASF_INCLUDE_DIR)
 
-build_only: $(OBJS)
+static_library: $(OBJS)
 	rm -f libasf_terrcorr.a
 	ar r libasf_terrcorr.a $(OBJS)
 	$(RANLIB) libasf_terrcorr.a
 
+shared_library: $(OBJS)
+	gcc -shared -o libasf_terrcorr.so $(OBJS)
+	mv libasf_terrcorr.so $(LIBDIR)
+	
 $(OBJS): Makefile $(wildcard *.h) $(wildcard ../../include/*.h)
 
 clean:

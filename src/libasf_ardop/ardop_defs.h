@@ -46,7 +46,7 @@ complexFloat Czero();
 complexFloat Csmul(float,complexFloat);
 complexFloat Cmul (complexFloat,complexFloat);
 
-/*cfft1d: Perform FFT, 1 dimentional:
+/*cfft1d: Perform FFT, 1 dimensional:
 	dir=0 -> init; 
 	dir<0 -> forward; 
 	dir>0 -> backward*/

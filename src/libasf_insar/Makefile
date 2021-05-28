@@ -22,15 +22,19 @@ OBJS = \
 	refine_baseline.o \
 	phase_filter.o
 
-all: build_only
+all: static_library
 	mv libasf_insar.a $(LIBDIR)
-	cp asf_insar.h $(ASF_INCLUDE_DIR)
-	cp ips.h $(ASF_INCLUDE_DIR)
+	cp -p asf_insar.h $(ASF_INCLUDE_DIR)
+	cp -p ips.h $(ASF_INCLUDE_DIR)
 
-build_only: $(OBJS)
+static_library: $(OBJS)
 	rm -f libasf_insar.a
 	ar r libasf_insar.a $(OBJS)
 	$(RANLIB) libasf_insar.a
+	
+shared_library: $(OBJS)
+	$(CC) -shared -o libasf_insar.so $(OBJS)
+	mv libasf_insar.so $(LIBDIR)
 
 $(OBJS): Makefile $(wildcard *.h) $(wildcard ../../include/*.h)
 

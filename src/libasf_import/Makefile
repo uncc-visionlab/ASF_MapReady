@@ -100,17 +100,22 @@ OBJS  = \
 	lut.o \
 	write_meta_and_img.o
 
-all: build_only
+all: static_library
 	mv libasf_import.a $(LIBDIR)
-	cp asf_import.h fgdc_meta.h dem_meta.h prc_stvecs.h \
+	cp -p asf_import.h fgdc_meta.h dem_meta.h prc_stvecs.h \
 	$(ASF_INCLUDE_DIR)
 	rm -rf $(SHAREDIR)/sentinel
 	cp -R sentinel $(SHAREDIR)
 
-build_only: $(OBJS)
+static_library: $(OBJS)
 	rm -f libasf_import.a
 	ar r libasf_import.a $(OBJS)
 	$(RANLIB) libasf_import.a
+	
+shared_library: $(OBJS)
+	$(MAKE) -C ../libasf_sar shared_library
+	$(CC) -shared -o libasf_import.so $(OBJS) -L$(LIBDIR) -lasf_sar
+	mv libasf_import.so $(LIBDIR)
 
 $(OBJS): Makefile $(wildcard *.h) $(wildcard ../../include/*h)
 

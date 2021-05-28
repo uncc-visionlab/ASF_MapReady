@@ -73,8 +73,8 @@
 #define MAX_BANDS 50
 
 /* These are the dummy values that meta variables get set to at initialization */
-#define MAGIC_UNSET_CHAR ('?')
-#define MAGIC_UNSET_STRING ("???")
+#define MAGIC_UNSET_CHAR '?'
+#define MAGIC_UNSET_STRING "???"
 #define MAGIC_UNSET_SHORT (-9999)
 #define MAGIC_UNSET_INT (-999999999)
 /* For MAGIC_UNSET_DOUBLE to work, you must include asf_nan.h */

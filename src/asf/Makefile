@@ -42,25 +42,27 @@ CFLAGS += $(W_ERROR) $(shell \
 	else echo "-D_XOPEN_SOURCE=600 -std=c99"; \
 	fi)
 
-all: build_only test
+all: static_library test
 	mv asf.a $(LIBDIR)
-	cp asf.h asf_glib.h asf_complex.h caplib.h vector.h matrix.h \
+	cp -p asf.h asf_glib.h asf_complex.h caplib.h vector.h matrix.h \
 		asf_tiff.h asf_jpeg.h $(ASF_INCLUDE_DIR)
 	cp pixmaps/* $(SHAREDIR)
 	rm *.o
 
-build_only: $(OBJS)
+static_library: $(OBJS)
 	rm -f asf.a
 	ar r asf.a $(OBJS)
 	$(RANLIB) asf.a
-	gcc -shared -o libasf.so $(OBJS)
+
+shared_library: $(OBJS)
+	$(CC) -shared -o libasf.so $(OBJS)
 	mv libasf.so $(LIBDIR)
 	
 # Rebuild everything if makefile or any local of ASF header or library
 # has changed.
 $(OBJS): Makefile $(wildcard *.h) $(wildcard ../../include/*.h)
 
-check: unit_tests.c build_only
+check: unit_tests.c static_library
 	$(CC) $(CFLAGS) $< asf.a -lcheck -lm $(LDFLAGS) -o asf_tester
 	./asf_tester
 

@@ -29,15 +29,19 @@ ASPLIB = patch.o \
 CFLAGS := $(patsubst -D_ISOC99_SOURCE, , $(CFLAGS))
 CFLAGS += $(GLIB_CFLAGS) $(W_ERROR) $(JPEG_CFLAGS) $(GEOTIFF_CFLAGS) $(HDF5_CFLAGS)
 
-all: build_only
+all: static_library
 	mv libasf_ardop.a $(LIBDIR)
-	cp ardop_defs.h $(ASF_INCLUDE_DIR)
-	cp read_signal.h $(ASF_INCLUDE_DIR)
+	cp -p ardop_defs.h $(ASF_INCLUDE_DIR)
+	cp -p read_signal.h $(ASF_INCLUDE_DIR)
 
-build_only: $(OBJLIB) $(ASPLIB)
+static_library: $(OBJLIB) $(ASPLIB)
 	rm -f libasf_ardop.a
 	ar r libasf_ardop.a $(OBJLIB) $(ASPLIB)
 	$(RANLIB) libasf_ardop.a
+
+shared_library: $(OBJLIB) $(ASPLIB)
+	$(CC) -shared -o libasf_ardop.so $(OBJLIB) $(ASPLIB)
+	mv libasf_ardop.so $(LIBDIR)
 
 clean:
 	rm -f core* $(OBJLIB) *.o

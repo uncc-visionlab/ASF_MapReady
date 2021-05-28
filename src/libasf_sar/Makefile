@@ -41,9 +41,9 @@ LIBS = \
 	$(GSL_LIBS) \
 	-lm
 
-all: build_only
+all: static_library
 	cp libasf_sar.a $(LIBDIR)
-	cp asf_sar.h poly.h $(ASF_INCLUDE_DIR)
+	cp -p asf_sar.h poly.h $(ASF_INCLUDE_DIR)
 	cp polarimetry.cfg $(SHAREDIR)
 	cp point_target_analysis.cfg $(SHAREDIR)
 	mkdir -p $(SHAREDIR)/classifications
@@ -53,11 +53,19 @@ all: build_only
 	cp jasc_palettes/* $(SHAREDIR)/look_up_tables
 	-cp ea_boundary.txt $(SHAREDIR)/classifications
 
-build_only: $(OBJS)
+static_library: $(OBJS)
 	rm -f libasf_sar.a
 	ar r libasf_sar.a $(OBJS)
 	$(RANLIB) libasf_sar.a
 
+shared_library:
+	#$(MAKE) -C ../asf shared_library
+	#$(MAKE) -C ../asf_meta shared_library
+	#$(MAKE) -C ../libasf_vector shared_library
+	#$(MAKE) -C ../libasf_raster shared_library
+	gcc -shared -o libasf_sar.so $(OBJS) -L$(LIBDIR) -lasf -lasf_meta -lasf_vector -lasf_raster
+	mv libasf_sar.so $(LIBDIR)
+	
 $(OBJS): Makefile $(wildcard *.h) $(wildcard ../../include/*.h)
 
 clean:

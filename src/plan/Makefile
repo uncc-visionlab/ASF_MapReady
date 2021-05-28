@@ -48,9 +48,9 @@ OBJS  = $(TARGET).o \
 	overlap.o \
 	tle.o
 
-all: lib exe clean
+all: static_library exe clean
 
-lib: $(OBJS)
+static_library: $(OBJS)
 	ar r $(LIBNAME) $(OBJS)
 	$(RANLIB) $(LIBNAME)
 	mv $(LIBNAME) $(LIBDIR)

@@ -1,3 +1,5 @@
+CFLAGS += $(HDF5_CFLAGS)
+CFLAGS += $(GEOTIFF_CFLAGS)
 # Makefile for 	      :  libifm.a 
 # Module Author       :  Mike Shindle  
 # Module Version      :  2.0
@@ -54,12 +56,17 @@ IOBJS = imsl_c_smul.o \
 	imos2d.o \
         wks_allocate.o 
         
-all: libifm.a
+all: static_library
 
-libifm.a: $(OBJS)
+static_library: $(OBJS)
+	rm -f libifm.a
 	ar rv libifm.a $(OBJS)
 	$(RANLIB) libifm.a
 	mv libifm.a $(LIBDIR)
 
+shared_library: $(OBJS)
+	gcc -shared -o libifm.so $(OBJS)
+	mv libifm.so $(LIBDIR)
+	
 clean:
 	-rm -f *.o

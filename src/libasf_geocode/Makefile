@@ -94,20 +94,28 @@ CFLAGS += $(DEBUG_FEATURES)
 # Object files.
 OBJS := $(patsubst %.c, %.o, $(SOURCES))
 
-all: build_only share_files
+all: static_library share_files
 
 share_files:
 	mv libasf_geocode.a $(LIBDIR)
-	cp asf_geocode.h $(ASF_INCLUDE_DIR)
+	cp -p asf_geocode.h $(ASF_INCLUDE_DIR)
 	rm -rf $(SHAREDIR)/projections
 	cp -R projections $(SHAREDIR)
 	cp WW15MGH.DAC $(SHAREDIR)
 
-build_only: $(OBJS)
+static_library: $(OBJS)
 	rm -f libasf_geocode.a
 	ar r libasf_geocode.a $(OBJS)
 	$(RANLIB) libasf_geocode.a
-
+	
+shared_library: $(OBJS)
+	$(MAKE) -C ../asf shared_library
+	$(MAKE) -C ../asf_meta shared_library
+	$(MAKE) -C ../libasf_proj shared_library
+	$(MAKE) -C ../libasf_raster shared_library
+	$(CC) -shared -o libasf_geocode.so $(OBJS) -L$(LIBDIR) -lasf -lasf_meta -lasf_proj -lasf_raster
+	mv libasf_geocode.so $(LIBDIR)
+	
 $(OBJS): Makefile $(wildcard *.h) $(wildcard ../../include/*h)
 
 clean:

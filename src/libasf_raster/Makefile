@@ -35,6 +35,7 @@ OBJS = \
 
 LIBS :=	\
 	$(LIBDIR)/asf_meta.a \
+	$(LIBDIR)/asf_fft.a \
 	$(LIBDIR)/libasf_proj.a \
 	$(LIBDIR)/libasf_raster.a \
 	$(LIBDIR)/libasf_export.a \
@@ -48,17 +49,27 @@ LIBS :=	\
 	$(GLIB_LIBS) \
 	-lm
 
-all: build_only
+all: static_library
 	cp libasf_raster.a $(LIBDIR)
-	cp asf_raster.h float_image.h banded_float_image.h uint8_image.h \
+	cp -p asf_raster.h float_image.h banded_float_image.h uint8_image.h \
 	expression.h $(ASF_INCLUDE_DIR)
 	rm -rf $(SHAREDIR)/look_up_tables
 	cp -R look_up_tables $(SHAREDIR)
 
-build_only: $(OBJS)
+static_library: $(OBJS)
 	rm -f libasf_raster.a
 	ar r libasf_raster.a $(OBJS)
 	$(RANLIB) libasf_raster.a
+
+shared_library: $(OBJS)
+	$(MAKE) -C ../asf shared_library
+	$(MAKE) -C ../asf_meta shared_library
+	$(MAKE) -C ../asf_fft shared_library
+	$(MAKE) -C ../libasf_proj shared_library
+	$(MAKE) -C ../libasf_export shared_library
+	$(MAKE) -C ../libasf_import shared_library
+	gcc -shared -o libasf_raster.so $(OBJS) -L$(LIBDIR) -lasf -lasf_meta -lasf_fft -lasf_proj -lasf_export -lasf_import
+	mv libasf_raster.so $(LIBDIR)
 
 # Test program useful for verifying that the float_image class works
 # as expected.

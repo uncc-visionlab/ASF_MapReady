@@ -78,16 +78,20 @@ LIBS  = \
 
 OBJS := $(patsubst %.c, %.o, $(SOURCES))
 
-all: build_only
+all: static_library
 	mv libasf_export.a $(LIBDIR)
-	cp asf_export.h $(ASF_INCLUDE_DIR)
+	cp -p asf_export.h $(ASF_INCLUDE_DIR)
 #	cp -R iso $(SHAREDIR)
 
-build_only: $(OBJS)
+static_library: $(OBJS)
 	rm -f libasf_export.a
 	ar r libasf_export.a $(OBJS)
 	$(RANLIB) libasf_export.a
-
+	
+shared_library: $(OBJS)
+	$(CC) -shared -o libasf_export.so $(OBJS)
+	mv libasf_export.so $(LIBDIR)
+	
 $(OBJS): Makefile $(wildcard *.h) $(wildcard ../../include/*h)
 
 clean:

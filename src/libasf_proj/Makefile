@@ -20,16 +20,21 @@ LIBS =	$(PROJ_LIBS) \
 
 OBJS = project.o spheroid_axes_lengths.o datum_spheroid.o geotiff_support.o
 
-all: build_only
+all: static_library
 	cp libasf_proj.a $(LIBDIR)
-	cp libasf_proj.h geotiff_support.h $(ASF_INCLUDE_DIR)
-	cp spheroids.h $(ASF_INCLUDE_DIR)
+	cp -p libasf_proj.h geotiff_support.h $(ASF_INCLUDE_DIR)
+	cp -p spheroids.h $(ASF_INCLUDE_DIR)
 	rm *.o
 
-build_only: $(OBJS)
+static_library: $(OBJS)
 	rm -f libasf_proj.a
 	ar r libasf_proj.a $(OBJS)
 	$(RANLIB) libasf_proj.a
+
+shared_library: $(OBJS)
+	#$(MAKE) -C ../asf shared_library
+	$(CC) -shared -o libasf_proj.so $(OBJS) -L$(LIBDIR) -lasf
+	mv libasf_proj.so $(LIBDIR)
 
 clean:
 	rm -rf $(OBJS) libasf_proj.a project.t.o project.t test *.t.o
