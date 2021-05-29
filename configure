@@ -3197,6 +3197,9 @@ nodeName=`uname -n`
 versMajor=`uname -r | awk -F. '{print $1}'`
 versMinor=`uname -r | awk -F. '{print $2}'`
 c99="-D_ISOC99_SOURCE"
+picFlag=""
+pieFlag=""
+symFlag=""
 
 ranlib="@echo do not need to run ranlib on this system on file: "
 optFlag="-O4"
@@ -3206,7 +3209,12 @@ case "${osType}:${versMajor}:${versMinor}" in
 	Darwin:*:*)
 		sys="darwin" ;;
 	Linux:*:*)
-		sys="linux" ;;
+		sys="linux" 
+                #SWIG Libraries will not work properly with high optimization levels
+                optFlag=""
+                symFlag="-g"
+                pieFlag="-no-pie"
+                picFlag="-fPIC" ;;
 	CYGWIN*:*:*)
 		sys="win32"
 		winsys="cygwin"
@@ -6646,6 +6654,9 @@ WINSYS    =   $winsys
 CC        =   $CC
 RANLIB    =   $ranlib
 OPTFLAG   =   $optFlag
+SYM_FLAG  =   $symFlag
+PIC_FLAG  =   $pieFlag
+PIE_FLAG  =   $picFlag
 C99_FLAGS =   $c99
 W_ERROR   =   $w_error
 VER       =   -DMAKE_VER
@@ -6764,6 +6775,9 @@ EOF
 cat <<'EOF' >>system_rules
 
 CFLAGS := \
+        $(SYM_FLAG) \
+        $(PIE_FLAG) \
+        $(PIC_FLAG) \
 	$(OPTFLAG) \
 	$(DEBUGFLAGS) \
 	$(LARGEFILE_FLAGS) \
@@ -6776,7 +6790,7 @@ CFLAGS := \
 	$(VER) \
 	$(CFLAGS)
 
-LDFLAGS := $(LDFLAGS) $(DEBUGLIBS) -lm
+LDFLAGS := $(PIE_FLAG) $(PIC_FLAG) $(LDFLAGS) $(DEBUGLIBS) -lm
 
 EOF
 
