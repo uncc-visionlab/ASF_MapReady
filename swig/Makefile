@@ -131,7 +131,7 @@ swig: .FORCE
 	
 #### Clean target deletes all generated files ####c
 clean:
-	rm -rf Java/src/swig/asf/*
+	rm -rf Java/src/swig/asf/* Java/dist Java/build || true
 	rm Python/_asf_mapready.so Python/asf_mapready.py Python/__init.py__ || true
 	rm asf_mapready_wrap.c asf_mapready_wrap.o Java/src/native_libs/libasf_mapready.so || true
 
