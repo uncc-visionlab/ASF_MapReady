@@ -35,6 +35,7 @@ all: static_library
 	cp -p read_signal.h $(ASF_INCLUDE_DIR)
 
 static_library: $(OBJLIB) $(ASPLIB)
+	make -C ../libasf_export
 	rm -f libasf_ardop.a
 	ar r libasf_ardop.a $(OBJLIB) $(ASPLIB)
 	$(RANLIB) libasf_ardop.a
